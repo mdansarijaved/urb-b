@@ -5,8 +5,8 @@ export const redisUrl = process.env.REDIS_URL as string;
 
 export const redisClient: RedisClientType = createClient({
   url: redisUrl,
-  socket: {
-    tls: true,
-    rejectUnauthorized: false,
-  },
+  // socket: {
+  //   tls: true,
+  //   rejectUnauthorized: false,
+  // },
 });

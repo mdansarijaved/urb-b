@@ -1,0 +1,181 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserReconcilliationType {
+  USERNAME
+  EMAIL
+  PHONE
+  GOOGLE
+  INSTAGRAM
+  GITHUB
+  APPLE
+  FACEBOOK
+  MICROSOFT
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  links         Link[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+// model UserReconcilliation {
+//   id          String        @id @default(uuid())
+
+//   createdAt   DateTime      @default(now())
+//   updatedAt   DateTime      @updatedAt
+//   identifiers Identifiers[]
+
+//   @@map("user_reconcilliation")
+// }
+
+// model Identifiers {
+//   id                    String                  @id @default(uuid())
+//   identifier            UserReconcilliationType
+//   value                 String
+//   userReconcilliationId String
+//   userReconcilliation   UserReconcilliation     @relation(fields: [userReconcilliationId], references: [id], onDelete: Cascade)
+//   createdAt             DateTime                @default(now())
+//   updatedAt             DateTime                @updatedAt
+
+//   @@unique([identifier, value])
+//   @@index([userReconcilliationId])
+//   @@map("identifiers")
+// }
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Link {
+  id            String    @id @default(uuid())
+  shortCode     String    @unique
+  originalUrl   String    @db.Text
+  title         String?
+  description   String?   @db.Text
+  isActive      Boolean   @default(true)
+  expiresAt     DateTime?
+  totalClicks   Int       @default(0)
+  uniqueClicks  Int       @default(0)
+  lastClickedAt DateTime?
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  clicks        Click[]
+
+  @@index([userId])
+  @@index([shortCode])
+  @@index([createdAt])
+  @@index([isActive, expiresAt])
+  @@map("link")
+}
+
+model Click {
+  id             String     @id @default(uuid())
+  linkId         String
+  link           Link       @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  timestamp      DateTime   @default(now())
+  ipHash         String?
+  country        String?
+  countryCode    String?
+  region         String?
+  city           String?
+  timezone       String?
+  deviceType     DeviceType @default(UNKNOWN)
+  os             String?
+  osVersion      String?
+  browser        String?
+  browserVersion String?
+  userAgentRaw   String?    @db.Text
+  referrer       String?    @db.Text
+  referrerDomain String?
+  isUnique       Boolean    @default(true)
+
+  @@index([linkId])
+  @@index([timestamp])
+  @@index([linkId, timestamp])
+  @@index([country])
+  @@index([deviceType])
+  @@index([browser])
+  @@index([os])
+  @@index([referrerDomain])
+  @@map("click")
+}
+
+enum DeviceType {
+  DESKTOP
+  MOBILE
+  TABLET
+  TV
+  WEARABLE
+  CONSOLE
+  BOT
+  UNKNOWN
+}

@@ -8,7 +8,7 @@
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "ESNext",
-    "target": "ES2023",
+    "target": "esnext",
     "types": [],
     // For nodejs:
     // "lib": ["esnext"],
@@ -38,7 +38,6 @@
     "moduleResolution": "node",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
     "esModuleInterop": true

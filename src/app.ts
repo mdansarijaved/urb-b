@@ -7,6 +7,7 @@ import { toNodeHandler } from "better-auth/node";
 import { auth } from "./auth";
 import errorMiddleWare from "./error.js";
 import { API_PREFIX } from "./config/constants.js";
+import UrlRouter from "./routes/url.js";
 
 
 
@@ -22,13 +23,16 @@ app.use(
 const apiRouter = express.Router();
 apiRouter.all("/auth/*splat", toNodeHandler(auth));
 
-app.use(CookieParser());
-app.use(express.json());
+apiRouter.use(CookieParser());
+apiRouter.use(express.json());
 // built in better auth routes.
 // Register	POST /api/v1/auth/sign-up/email	{ name, email, password }
 // Login	POST /api/v1/auth/sign-in/email	{ email, password }
 // Logout	POST /api/v1/auth/sign-out	-
 // Get Session	GET /api/v1/auth/get-session	-
+
+
+apiRouter.use("/url", UrlRouter)
 
 apiRouter.use("/", rootRouter);
 

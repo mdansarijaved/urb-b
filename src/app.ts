@@ -4,10 +4,10 @@ import type { Application } from "express";
 import CookieParser from 'cookie-parser';
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./auth";
-import errorMiddleWare from "./error.js";
-import { API_PREFIX } from "./config/constants.js";
-import UrlRouter from "./routes/url.js";
-import { urlService } from "./service/urlserice.js";
+import errorMiddleWare from "./error";
+import { API_PREFIX } from "./config/constants";
+import UrlRouter from "./routes/url";
+import { urlService } from "./service/urlserice";
 import { rootRouter } from "./routes/root";
 
 

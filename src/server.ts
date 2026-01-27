@@ -1,8 +1,8 @@
 import "dotenv/config";
 import { createServer } from "http";
-import { app } from "./app.js";
-import { PORT } from "./config/constants.js";
-import { redis } from "./config/redis.js";
+import { app } from "./app";
+import { PORT } from "./config/constants";
+import { redis } from "./config/redis";
 
 export const startServer = async () => {
   redis.on("error", (err) => console.log("Redis Client Error", err));

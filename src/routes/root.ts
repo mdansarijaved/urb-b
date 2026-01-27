@@ -1,6 +1,6 @@
 import { Router } from "express";
 import type { Router as ExpressRouter } from "express";
-import { urlService } from "../service/urlserice";
+import { urlService } from "../service/urlserice.js";
 
 export const rootRouter: ExpressRouter = Router();
 

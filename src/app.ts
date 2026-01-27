@@ -2,12 +2,13 @@ import express from "express";
 import cors from "cors"
 import type { Application } from "express";
 import CookieParser from 'cookie-parser';
-import { rootRouter } from "./routes/root.js";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./auth";
 import errorMiddleWare from "./error.js";
 import { API_PREFIX } from "./config/constants.js";
 import UrlRouter from "./routes/url.js";
+import { urlService } from "./service/urlserice.js";
+import { rootRouter } from "./routes/root";
 
 
 
@@ -32,9 +33,10 @@ apiRouter.use(express.json());
 // Get Session	GET /api/v1/auth/get-session	-
 
 
+app.use("/", rootRouter)
 apiRouter.use("/url", UrlRouter)
 
-apiRouter.use("/", rootRouter);
+
 
 
 

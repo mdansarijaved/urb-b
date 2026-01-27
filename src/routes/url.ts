@@ -1,18 +1,9 @@
 import { Router } from "express";
 import type { Router as ExpressRouter } from "express";
 import crypto from "crypto"
-import { prisma } from "../lib/prisma";
 import * as z from "zod";
-import { auth } from "../auth";
-import { fromNodeHeaders } from "better-auth/node";
-
-
-const urlSchema = z.object({
-  url: z.url({
-    protocol: /^https?$/
-  }),
-  code: z.string()
-})
+import { urlService } from "../service/urlserice";
+import { attachUser } from "../middlewares/user.middleware";
 
 
 const UrlRouter: ExpressRouter = Router();
@@ -33,28 +24,16 @@ export function generateCode(length = 6) {
   return code;
 }
 
-UrlRouter.post("/", async (req, res) => {
+UrlRouter.post("/", attachUser, async (req, res) => {
 
   try {
-
     const { url } = req.body;
     const code = generateCode();
-    const user = await auth.api.getSession({
-      headers: fromNodeHeaders(req.headers)
-    });
-    const parsed = urlSchema.parse({ url, code })
 
-
-    await prisma.link.create({
-      data: {
-        originalUrl: parsed.url,
-        shortCode: parsed.code,
-        userId: user?.user.id ?? null
-      }
-    })
-
+    await urlService.createShortURL(url, code, req.user);
 
     return res.send(code)
+
   } catch (error) {
     console.log(error);
     if (error instanceof z.ZodError) {
@@ -62,8 +41,6 @@ UrlRouter.post("/", async (req, res) => {
         message: error.message
       })
     }
-
-
     return res.status(400).json({
       message: "something went wrong"
     })

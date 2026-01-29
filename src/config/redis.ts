@@ -1,8 +1,14 @@
-import Redis from "ioredis"
+import Redis from "ioredis";
 
-export const redis = new Redis({
-  host: "localhost",
-  port: 6379,
-})
+const redisUrl = process.env.REDIS_URL;
 
+if (!redisUrl) {
+  throw new Error("REDIS_URL is not defined");
+}
 
+export const redis = new Redis(redisUrl, {
+  tls: {},
+  maxRetriesPerRequest: 1,
+  enableReadyCheck: false,
+  retryStrategy: () => null,
+});

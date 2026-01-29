@@ -51,6 +51,7 @@ UrlRouter.post("/", async (req, res) => {
 
 UrlRouter.get("/", async (req, res) => {
   try {
+    if (!req.user) return res.status(401).json({ message: "Unauthorized" });
 
     const limit = Math.min(Number(req.query.limit) || 10, 50);
     const page = Number(req.query.page) || 1;
@@ -61,8 +62,8 @@ UrlRouter.get("/", async (req, res) => {
     return res.status(200).json(userUrl);
   } catch (error) {
     console.log(error);
-    return res.status(400).json({
-      message: error
+    return res.status(500).json({
+      message: "Something went wrong."
     })
   }
 })

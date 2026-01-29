@@ -45,5 +45,15 @@ export const urlService = {
 
         await redis.set(cacheKey, url, "EX", TTL)
         await db.query('INSERT INTO "link"("originalUrl", "shortCode", "userId" ) VALUES($1, $2, $3)', [parsed.url, parsed.code, user?.id])
+    },
+
+    async getUserURls(userId?: string) {
+
+        const result = await db.query('SELECT "name", "email", "originalUrl", "shortCode", "link"."createdAt" FROM "user" JOIN "link" ON "user"."id" = "link"."userId" WHERE "user"."id" = $1 ', [userId])
+
+        const userUrl = result.rows;
+
+        return userUrl;
+
     }
 }

@@ -24,7 +24,7 @@ export function generateCode(length = 6) {
   return code;
 }
 
-UrlRouter.post("/", attachUser, async (req, res) => {
+UrlRouter.post("/", async (req, res) => {
 
   try {
     const { url } = req.body;

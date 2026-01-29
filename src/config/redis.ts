@@ -11,4 +11,5 @@ export const redis = new Redis(redisUrl, {
   maxRetriesPerRequest: 1,
   enableReadyCheck: false,
   retryStrategy: () => null,
-});
+}
+);

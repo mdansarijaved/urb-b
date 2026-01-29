@@ -8,6 +8,8 @@ import errorMiddleWare from "./error.js";
 import { API_PREFIX } from "./config/constants.js";
 import UrlRouter from "./routes/url.js";
 import { rootRouter } from "./routes/root.js";
+import { usersRouter } from "./routes/users.js";
+import { attachUser } from "./middlewares/user.middleware.js";
 
 
 
@@ -23,12 +25,15 @@ app.use(
 const apiRouter = express.Router();
 apiRouter.all("/auth/*splat", toNodeHandler(auth));
 
+
 apiRouter.use(CookieParser());
 apiRouter.use(express.json());
+apiRouter.use(attachUser);
 
 
 app.use("/", rootRouter)
 apiRouter.use("/url", UrlRouter)
+apiRouter.use("/user", usersRouter);
 
 
 

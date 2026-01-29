@@ -1,7 +1,7 @@
 import { redis } from "../config/redis";
-import { prisma } from "../lib/prisma";
 import { z } from "zod"
 import type { User } from "better-auth/types"
+import { db } from "../lib/db";
 
 const URL_REDIS_PREFIX = "shorturl:"
 
@@ -26,15 +26,8 @@ export const urlService = {
         if (url) {
             return url;
         }
-
-        const link = await prisma.link.findUnique({
-            where: {
-                shortCode: code
-            },
-            select: {
-                originalUrl: true
-            }
-        })
+        const result = await db.query('SELECT "originalUrl" FROM "link" WHERE "shortCode" = $1', [code])
+        const link = result.rows[0];
 
         if (!link) {
             return null;
@@ -51,13 +44,6 @@ export const urlService = {
         const cacheKey = `${URL_REDIS_PREFIX}${code}`
 
         await redis.set(cacheKey, url, "EX", TTL)
-
-        await prisma.link.create({
-            data: {
-                originalUrl: parsed.url,
-                shortCode: parsed.code,
-                userId: user?.id ?? null
-            }
-        })
+        await db.query('INSERT INTO "link"("originalUrl", "shortCode", "userId" ) VALUES($1, $2, $3)', [parsed.url, parsed.code, user?.id])
     }
 }

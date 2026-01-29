@@ -1,16 +1,14 @@
 import { betterAuth, type Auth } from "better-auth";
-import { prismaAdapter } from "better-auth/adapters/prisma";
-import { prisma } from "./lib/prisma";
+import { Pool } from 'pg';
+import { db } from "./lib/db";
 export const auth: Auth = betterAuth({
   basePath: "/api/v1/auth",
-  database: prismaAdapter(prisma, {
-    provider: "postgresql",
-  }),
+  database: db,
   trustedOrigins: ["http://localhost:3000"],
   // use for postman
-  // advanced: {
-  //   disableOriginCheck: true
-  // },
+  advanced: {
+    disableOriginCheck: true
+  },
   emailAndPassword: {
     enabled: true,
   },

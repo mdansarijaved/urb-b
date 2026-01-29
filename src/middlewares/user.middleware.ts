@@ -1,6 +1,6 @@
 
 import type { NextFunction, Request, Response } from "express";
-import { auth } from "../auth";
+import { auth } from "../auth.js";
 import { fromNodeHeaders } from "better-auth/node";
 
 export async function attachUser(req: Request, res: Response, next: NextFunction) {

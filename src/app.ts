@@ -3,12 +3,11 @@ import cors from "cors"
 import type { Application } from "express";
 import CookieParser from 'cookie-parser';
 import { toNodeHandler } from "better-auth/node";
-import { auth } from "./auth";
-import errorMiddleWare from "./error";
-import { API_PREFIX } from "./config/constants";
-import UrlRouter from "./routes/url";
-import { urlService } from "./service/urlserice";
-import { rootRouter } from "./routes/root";
+import { auth } from "./auth.js";
+import errorMiddleWare from "./error.js";
+import { API_PREFIX } from "./config/constants.js";
+import UrlRouter from "./routes/url.js";
+import { rootRouter } from "./routes/root.js";
 
 
 
@@ -26,11 +25,6 @@ apiRouter.all("/auth/*splat", toNodeHandler(auth));
 
 apiRouter.use(CookieParser());
 apiRouter.use(express.json());
-// built in better auth routes.
-// Register	POST /api/v1/auth/sign-up/email	{ name, email, password }
-// Login	POST /api/v1/auth/sign-in/email	{ email, password }
-// Logout	POST /api/v1/auth/sign-out	-
-// Get Session	GET /api/v1/auth/get-session	-
 
 
 app.use("/", rootRouter)

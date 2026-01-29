@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { readFileSync } from "fs";
 import { join } from "path";
-import { db } from "../lib/db";
+import { db } from "../lib/db.js";
 
 
 async function migrate() {

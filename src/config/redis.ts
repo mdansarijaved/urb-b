@@ -1,8 +1,7 @@
-// lib/redis.ts
 import Redis from "ioredis"
 
 export const redis = new Redis({
-  host: "localhost", // or your cloud redis
+  host: "localhost",
   port: 6379,
 })
 

@@ -2,8 +2,8 @@ import { Router } from "express";
 import type { Router as ExpressRouter } from "express";
 import crypto from "crypto"
 import * as z from "zod";
-import { urlService } from "../service/urlserice";
-import { attachUser } from "../middlewares/user.middleware";
+import { urlService } from "../service/urlserice.js";
+import { attachUser } from "../middlewares/user.middleware.js";
 
 
 const UrlRouter: ExpressRouter = Router();
@@ -17,8 +17,8 @@ export function generateCode(length = 6) {
   let code = "";
 
   for (let i = 0; i < length; i++) {
-    // @ts-expect-error
-    code += ALPHABET[bytes[i] % 62];
+    const b = bytes[i] ?? 0;
+    code += ALPHABET[b % 62] ?? "";
   }
 
   return code;

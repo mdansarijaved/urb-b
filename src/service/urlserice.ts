@@ -1,7 +1,7 @@
-import { redis } from "../config/redis";
+import { redis } from "../config/redis.js";
 import { z } from "zod"
 import type { User } from "better-auth/types"
-import { db } from "../lib/db";
+import { db } from "../lib/db.js";
 
 const URL_REDIS_PREFIX = "shorturl:"
 

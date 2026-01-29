@@ -48,4 +48,23 @@ UrlRouter.post("/", async (req, res) => {
 
 });
 
+
+UrlRouter.get("/", async (req, res) => {
+  try {
+
+    const limit = Math.min(Number(req.query.limit) || 10, 50);
+    const page = Number(req.query.page) || 1;
+    const offset = (page - 1) * limit;
+    console.log(limit, offset, page)
+    const userUrl = await urlService.getUserURls(limit, offset, req.user?.id)
+
+    return res.status(200).json(userUrl);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      message: error
+    })
+  }
+})
+
 export default UrlRouter;
